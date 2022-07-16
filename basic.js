@@ -104,6 +104,23 @@ class App {
         // 출력 영역 크기를 바탕으로 렌더러 크기 설정
         this._renderer.setSize(width, height);
     }
+
+    render(time) {
+        // Scene을 카메라 시점으로 렌더링하라는 코드
+        this._renderer.render(this._scene, this._camera);
+        // update 메서드 안에서는 time 인자를 바탕으로 애니메이션 효과 발생
+        this.update(time);
+        // requestAnimationFrame을 통하여 render 메서드가 반복적으로 호출될 수 있다.
+        requestAnimationFrame(this.render.bind(this));
+    }
+
+    update(time) {
+        // 밀리초에서 초로 변환
+        time *= 0.001;
+        // 시간값으로 큐브 회전
+        this._cube.rotation.x = time;
+        this._cube.rotation.y = time;
+    }
 }
 
 window.onload = function () {
