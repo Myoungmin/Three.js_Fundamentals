@@ -46,20 +46,33 @@ class App {
         requestAnimationFrame(this.render.bind(this));
     }
 
-    _setupCamera(){
+    _setupCamera() {
         // 3D 그래픽을 출력할 영역 width, height 얻어오기
         const width = this._divContainer.clientWidth;
         const height = this._divContainer.clientHeight;
         // 얻어온 크기를 바탕으로 Perspective 카메라 객체 생성
         const camera = new Three.PerspectiveCamera(
             75,
-            width/height,
+            width / height,
             0.1,
             100
         );
         camera.position.z = 2;
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._camera = camera;
+    }
+
+    _setupLight() {
+        // 광원 색상 설정
+        const color = 0xffffff;
+        // 광원 세기 설정
+        const intensity = 1;
+        // 위 설정을 바탕으로 Directional 광원 객체 생성
+        const light = new Three.DirectionalLight(color, intensity);
+        // 광원 위치 설정
+        light.position.set(-1, 2, 4);
+        // Scene객체에 광원 추가
+        this._scene.add(light);
     }
 }
 
