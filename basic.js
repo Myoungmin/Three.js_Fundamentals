@@ -45,6 +45,22 @@ class App {
         // render 메서드 안에서 쓰이는 this가 App 클래스 객체를 가리키도록 하기 위해 bind 사용
         requestAnimationFrame(this.render.bind(this));
     }
+
+    _setupCamera(){
+        // 3D 그래픽을 출력할 영역 width, height 얻어오기
+        const width = this._divContainer.clientWidth;
+        const height = this._divContainer.clientHeight;
+        // 얻어온 크기를 바탕으로 Perspective 카메라 객체 생성
+        const camera = new Three.PerspectiveCamera(
+            75,
+            width/height,
+            0.1,
+            100
+        );
+        camera.position.z = 2;
+        // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
+        this._camera = camera;
+    }
 }
 
 window.onload = function () {
