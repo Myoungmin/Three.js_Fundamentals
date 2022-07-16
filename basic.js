@@ -74,6 +74,22 @@ class App {
         // Scene객체에 광원 추가
         this._scene.add(light);
     }
+
+    _setupModel() {
+        // 정육면체 Geometry 객체 생성
+        // width, height, depth 인자를 모두 1로 설정하여 생성한다.
+        const geometry = new Three.BoxGeometry(1, 1, 1);
+        // 파란색 material 생성
+        const material = new Three.MeshPhongMaterial({ color: 0x44a88 });
+
+        // Geometry와 Material를 이용하여 Mesh가 생성된다.
+        const cube = new Three.Mesh(geometry, material);
+
+        // 생성한 Mesh를 Scene 객체에 구가
+        this._scene.add(cube);
+        // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
+        this._cube = cube;
+    }
 }
 
 window.onload = function () {
