@@ -90,6 +90,20 @@ class App {
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._cube = cube;
     }
+
+    resize() {
+        // 3D 그래픽을 출력할 영역 width, height 얻어오기
+        const width = this._divContainer.clientWidth;
+        const height = this._divContainer.clientHeight;
+
+        // 출력할 영역 width, height로 aspect 계산하여 카메라 aspect를 설정
+        this._camera.aspect = width / height;
+        // 변경된 aspect를 바탕으로 ProjectionMatrix 업데이트
+        this._camera.updateProjectionMatrix();
+
+        // 출력 영역 크기를 바탕으로 렌더러 크기 설정
+        this._renderer.setSize(width, height);
+    }
 }
 
 window.onload = function () {
