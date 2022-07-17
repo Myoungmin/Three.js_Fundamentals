@@ -57,7 +57,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 2;
+        camera.position.z = 50;
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._camera = camera;
     }
@@ -76,19 +76,53 @@ class App {
     }
 
     _setupModel() {
-        // 정육면체 Geometry 객체 생성
-        // width, height, depth 인자를 모두 1로 설정하여 생성한다.
-        const geometry = new Three.BoxGeometry(1, 1, 1);
-        // 파란색 material 생성
-        const material = new Three.MeshPhongMaterial({ color: 0x44a88 });
+        const solarSystem = new Three.Object3D();
+        this._scene.add(solarSystem);
 
-        // Geometry와 Material를 이용하여 Mesh가 생성된다.
-        const cube = new Three.Mesh(geometry, material);
+        const radius = 1;
+        const widthSegments = 12;
+        const heightSegments = 12;
+        const sphereGeometry = new Three.SphereGeometry(radius, widthSegments, heightSegments);
 
-        // 생성한 Mesh를 Scene 객체에 구가
-        this._scene.add(cube);
-        // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
-        this._cube = cube;
+        const sunMaterial = new Three.MeshPhongMaterial({
+            emissive: 0xffff00, flatshading: true
+        });
+
+        // 태양 Mesh 생성, 크기 조정, solarSystem Object3D에 추가
+        const sunMesh = new Three.Mesh(sphereGeometry, sunMaterial);
+        sunMesh.scale.set(3, 3, 3);
+        solarSystem.add(sunMesh);
+
+        // solarSystem Object3D 자식 객체로 earthOrbit Object3D 추가
+        const earthOrbit = new Three.Object3D();
+        solarSystem.add(earthOrbit);
+
+        const earthMaterial = new Three.MeshPhongMaterial({
+            color: 0x2233ff, emissive: 0x112244, flatshading: true
+        });
+
+        // 지구 Mesh 생성
+        const earthMesh = new Three.Mesh(sphereGeometry, earthMaterial);
+        // earthOrbit Object3D 위치 조정
+        earthOrbit.position.x = 10;
+        // earthOrbit Object3D에 지구 Mesh 추가
+        earthOrbit.add(earthMesh);
+
+        // earthOrbit Object3D 자식 객체로 moonOrbit Object3D 추가
+        const moonOrbit = new Three.Object3D();
+        moonOrbit.position.x = 2;
+        earthOrbit.add(moonOrbit);
+
+        const moonMaterial = new Three.MeshPhongMaterial({
+            color: 0x888888, emissive: 0x222222, flatshading: true
+        });
+
+        // 달 Mesh 생성
+        const moonMesh = new Three.Mesh(sphereGeometry, moonMaterial);
+        // 달 Mesh 크기 조정
+        moonMesh.scale.set(0.5, 0.5, 0.5);
+        // moonOrbit Object3D에 달 Mesh 추가
+        moonOrbit.add(moonMesh);
     }
 
     resize() {
