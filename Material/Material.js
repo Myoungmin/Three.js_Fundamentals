@@ -1,4 +1,5 @@
 import * as Three from '../three.js/three.module.js';
+import {OrbitControls}  from '../three.js/OrbitControls.js'
 
 class App {
     constructor() {
@@ -32,6 +33,8 @@ class App {
         this._setupLight();
         // 3D 모델 설정
         this._setupModel();
+        // 마우스 컨트롤 설정
+        this._setupControls();
 
         // 창 크기가 변경될 때 발생하는 이벤트인 onresize에 App 클래스의 resize 메서드를 연결한다.
         // this가 가리키는 객체가 이벤트 객체가 아닌 App클래스 객체가 되도록 하기 위해 bind로 설정한다.
@@ -57,7 +60,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 2;
+        camera.position.z = 7;
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._camera = camera;
     }
@@ -76,19 +79,40 @@ class App {
     }
 
     _setupModel() {
-        // 정육면체 Geometry 객체 생성
-        // width, height, depth 인자를 모두 1로 설정하여 생성한다.
-        const geometry = new Three.BoxGeometry(1, 1, 1);
-        // 파란색 material 생성
-        const material = new Three.MeshPhongMaterial({ color: 0x44a88 });
+        const vertices = [];
+        // 1000개의 좌표를 -5 ~ 5 사이의 랜덤 값으로 설정
+        for (let i = 0; i < 10000; i++) {
+            const x = Three.MathUtils.randFloatSpread(5);
+            const y = Three.MathUtils.randFloatSpread(5);
+            const z = Three.MathUtils.randFloatSpread(5);
 
-        // Geometry와 Material를 이용하여 Mesh가 생성된다.
-        const cube = new Three.Mesh(geometry, material);
+            vertices.push(x, y, z);
+        }
 
-        // 생성한 Mesh를 Scene 객체에 구가
-        this._scene.add(cube);
-        // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
-        this._cube = cube;
+        // BufferGeometry 객체 생성
+        const geometry = new Three.BufferGeometry();
+        // "position"으로 위치 좌표 데이터임을 알려준다.
+        // buffer에 담기는 데이터의 3개의 값이 하나의 좌표라는 Attribute 설정으로 알려준다.
+        geometry.setAttribute(
+            "position",
+            new Three.Float32BufferAttribute(vertices, 3),
+        )
+
+        // PointsMaterial 객체 생성
+        const material = new Three.PointsMaterial({
+            color: "#00ffff",
+            size: 0.1,
+            // 카메라 위치에 따라 포인트 크기를 다르게 할지
+            sizeAttenuation: true,
+        })
+
+        // BufferGeometry, PointsMaterial로 Points 객체를 생성한다.
+        const points = new Three.Points(geometry, material);
+        this._scene.add(points);
+    }
+
+    _setupControls(){
+        new OrbitControls(this._camera, this._divContainer);
     }
 
     resize() {
