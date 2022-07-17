@@ -96,15 +96,31 @@ class App {
         geometry.setAttribute(
             "position",
             new Three.Float32BufferAttribute(vertices, 3),
-        )
+        )        
 
-        // PointsMaterial 객체 생성
+        /////// PointsMaterial 객체 생성 ///////////////////////////////////////////////
+        
+        const sprite = new Three.TextureLoader().load("../three.js/disc.png");
+
+        // const material = new Three.PointsMaterial({
+        //     color: "#00ffff",
+        //     size: 0.1,
+        //     // 카메라 위치에 따라 포인트 크기를 다르게 할지
+        //     sizeAttenuation: true,
+        // })
+
         const material = new Three.PointsMaterial({
+            map: sprite,
+            // 알파값이 alphaTest 값보다 클때만 픽셀이 렌더링된다.
+            alphaTest: 0.5,
+
             color: "#00ffff",
             size: 0.1,
             // 카메라 위치에 따라 포인트 크기를 다르게 할지
             sizeAttenuation: true,
         })
+
+        ////////////////////////////////////////////////////////////////////////////////
 
         // BufferGeometry, PointsMaterial로 Points 객체를 생성한다.
         const points = new Three.Points(geometry, material);
