@@ -134,6 +134,7 @@ class App {
     //     this._cube = group;
     // }
 
+    ///////////////////////////////////////////////////////////////////////////////////
     // // Shape 클래스를 이용하여 사각형 그리는 _setupModel 메서드
     // _setupModel() {
     //     // Shape 객체 생성해서 사각형 모양 그리기
@@ -159,6 +160,43 @@ class App {
     // }
 
 
+    /////////////////////////////////////////////////////////////////////////////////
+    // // Curve 클래스를 이해하기 위해, Sin그래프를 표현하는 _setupModel 메서드
+    // _setupModel() {
+    //     // Curve 클래스를 상속받은 CustomSinCurve 정의
+    //     class CustomSinCurve extends Three.Curve {
+    //         constructor(scale) {
+    //             super();
+    //             this.scale = scale;
+    //         }
+    //         getPoint(t) {
+    //             const tx = t * 3 - 1.5;
+    //             const ty = Math.sin(2 * Math.PI * t);
+    //             const tz = 0;
+    //             return new Three.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+    //         }
+    //     }
+
+    //     const path = new CustomSinCurve(4);
+
+    //     // BufferGeometry를 생성하고 CustomSinCurve 객체에서 Point들을 가져와 설정
+    //     const geometry = new Three.BufferGeometry();
+    //     // Curve를 구성하는 좌표의 개수를 크게 설정할 수록 좀 더 부드러운 선이 그려진다.
+    //     const points = path.getPoints(50);
+    //     geometry.setFromPoints(points);
+
+    //     // LineBasicMaterial로 Line 색 설정
+    //     const material = new Three.LineBasicMaterial({ color: 0xffff00 });
+    //     // BufferGeometry와 LineBasicMaterial로 Line 객체를 생성한다.
+    //     const line = new Three.Line(geometry, material);
+
+    //     // 생성한 Line 객체 Scene에 추가
+    //     this._scene.add(line);
+    // }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // Curve를 상속받은 CustomSinCurve 객체를 인자로, TubeGeometry를 생성하여 Mesh를 구성하는 _setupModel 메서드
     _setupModel() {
         // Curve 클래스를 상속받은 CustomSinCurve 정의
         class CustomSinCurve extends Three.Curve {
@@ -176,19 +214,28 @@ class App {
 
         const path = new CustomSinCurve(4);
 
-        // BufferGeometry를 생성하고 CustomSinCurve 객체에서 Point들을 가져와 설정
-        const geometry = new Three.BufferGeometry();
-        // Curve를 구성하는 좌표의 개수를 크게 설정할 수록 좀 더 부드러운 선이 그려진다.
-        const points = path.getPoints(50);
-        geometry.setFromPoints(points);
+        // Curve를 상속받은 CustomSinCurve 객체를 인자로 TubeGeometry를 생성한다.
+        const geometry = new Three.TubeGeometry(path);
 
-        // LineBasicMaterial로 Line 색 설정
-        const material = new Three.LineBasicMaterial({ color: 0xffff00 });
-        // BufferGeometry와 LineBasicMaterial로 Line 객체를 생성한다.
-        const line = new Three.Line(geometry, material);
+        // TubeGeometry 객체와 MeshPhongMaterial 객체를 이용하여 Mesh 객체 생성
+        const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
+        const tube = new Three.Mesh(geometry, fillMaterial);
 
-        // 생성한 Line 객체 Scene에 추가
-        this._scene.add(line);
+        // 노란색 선 Material 생성
+        const lineMaterial = new Three.LineBasicMaterial({ color: 0xffff00 });
+        // 노란색 선 Material과 생성했던 큐브 geometry를 이용하여 LineSegments 객체 생성
+        // WireframeGeometry를 적용해야 모델의 모든 외곽선이 정상적으로 표시된다.
+        const line = new Three.LineSegments(new Three.WireframeGeometry(geometry), lineMaterial);
+
+        // Mesh 객체와 LineSegment 객체를 하나로 다루기위해 Group 객체로 묶는다.
+        const group = new Three.Group();
+        group.add(tube);
+        group.add(line);
+
+        // 생성한 Group를 Scene 객체에 구가
+        this._scene.add(group);
+        // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
+        this._tube = group;
     }
 
 
