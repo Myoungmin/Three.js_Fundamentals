@@ -197,29 +197,62 @@ class App {
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Curve를 상속받은 CustomSinCurve 객체를 인자로, TubeGeometry를 생성하여 Mesh를 구성하는 _setupModel 메서드
+    // _setupModel() {
+    //     // Curve 클래스를 상속받은 CustomSinCurve 정의
+    //     class CustomSinCurve extends Three.Curve {
+    //         constructor(scale) {
+    //             super();
+    //             this.scale = scale;
+    //         }
+    //         getPoint(t) {
+    //             const tx = t * 3 - 1.5;
+    //             const ty = Math.sin(2 * Math.PI * t);
+    //             const tz = 0;
+    //             return new Three.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+    //         }
+    //     }
+
+    //     const path = new CustomSinCurve(4);
+
+    //     // Curve를 상속받은 CustomSinCurve 객체를 인자로 TubeGeometry를 생성한다.
+    //     const geometry = new Three.TubeGeometry(path);
+
+    //     // TubeGeometry 객체와 MeshPhongMaterial 객체를 이용하여 Mesh 객체 생성
+    //     const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
+    //     const tube = new Three.Mesh(geometry, fillMaterial);
+
+    //     // 노란색 선 Material 생성
+    //     const lineMaterial = new Three.LineBasicMaterial({ color: 0xffff00 });
+    //     // 노란색 선 Material과 생성했던 큐브 geometry를 이용하여 LineSegments 객체 생성
+    //     // WireframeGeometry를 적용해야 모델의 모든 외곽선이 정상적으로 표시된다.
+    //     const line = new Three.LineSegments(new Three.WireframeGeometry(geometry), lineMaterial);
+
+    //     // Mesh 객체와 LineSegment 객체를 하나로 다루기위해 Group 객체로 묶는다.
+    //     const group = new Three.Group();
+    //     group.add(tube);
+    //     group.add(line);
+
+    //     // 생성한 Group를 Scene 객체에 구가
+    //     this._scene.add(group);
+    //     // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
+    //     this._tube = group;
+    // }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // Vector2 배열을 이용하여 LatheGeometry 생성, Mesh를 구성하는 _setupModel 메서드
     _setupModel() {
-        // Curve 클래스를 상속받은 CustomSinCurve 정의
-        class CustomSinCurve extends Three.Curve {
-            constructor(scale) {
-                super();
-                this.scale = scale;
-            }
-            getPoint(t) {
-                const tx = t * 3 - 1.5;
-                const ty = Math.sin(2 * Math.PI * t);
-                const tz = 0;
-                return new Three.Vector3(tx, ty, tz).multiplyScalar(this.scale);
-            }
+        const points = [];
+        for (let i = 0; i < 10; ++i) {
+            points.push(new Three.Vector2(Math.sin(i * 0.2) * 3 + 3, (i - 5) * 0.8));
         }
 
-        const path = new CustomSinCurve(4);
+        // Vector2 배열을 이용하여 LatheGeometry를 생성한다.
+        const geometry = new Three.LatheGeometry(points);
 
-        // Curve를 상속받은 CustomSinCurve 객체를 인자로 TubeGeometry를 생성한다.
-        const geometry = new Three.TubeGeometry(path);
-
-        // TubeGeometry 객체와 MeshPhongMaterial 객체를 이용하여 Mesh 객체 생성
+        // LatheGeometry 객체와 MeshPhongMaterial 객체를 이용하여 Mesh 객체 생성
         const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
-        const tube = new Three.Mesh(geometry, fillMaterial);
+        const lathe = new Three.Mesh(geometry, fillMaterial);
 
         // 노란색 선 Material 생성
         const lineMaterial = new Three.LineBasicMaterial({ color: 0xffff00 });
@@ -229,13 +262,13 @@ class App {
 
         // Mesh 객체와 LineSegment 객체를 하나로 다루기위해 Group 객체로 묶는다.
         const group = new Three.Group();
-        group.add(tube);
+        group.add(lathe);
         group.add(line);
 
         // 생성한 Group를 Scene 객체에 구가
         this._scene.add(group);
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
-        this._tube = group;
+        this._lathe = group;
     }
 
 
