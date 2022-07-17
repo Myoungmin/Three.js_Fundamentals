@@ -81,7 +81,39 @@ class App {
     _setupModel() {
         // 큐브모양 geometry, 회색 material를 이용하여 Mesh 객체 생성
         // BoxGeometry에 width, height, depth 모두 2분할 적용
-        const geometry = new Three.BoxGeometry(1, 1, 1, 2, 2, 2);
+        //const geometry = new Three.BoxGeometry(1, 1, 1, 2, 2, 2);
+
+        // CircleGeometry 객체를 생성하는데 필요한 인자
+        // 반지름, 분할 개수(클수록 완전한 원), 시작 각도, 원을 구성하는 각도 크기
+        //const geometry = new Three.CircleGeometry(0.9, 16, Math.PI/2, Math.PI);
+
+        // ConeGeometry 객체를 생성하는데 필요한 인자
+        // 밑면 반지름, 원뿔의 높이, 밑면 원 분할 개수, 원뿔 높이 방향에대한 분할 개수, 밑면 개방 여부, 밑면 시작 각도, 밑면 원을 구성하는 각도 크기
+        //const geometry = new Three.ConeGeometry(0.5, 1.6, 16, 9, true, 0, Math.PI);
+
+        // CylinderGeometry 객체를 생성하는데 필요한 인자
+        // top 반지름, bottom 반지름, 원통의 높이, 원통 둘레방향에 대한 분할 개수, 높이 방향에 대한 분할 개수, 윗면 밑면 개방 여부, 시작 각도, 구성하는 각도 크기
+        //const geometry = new Three.CylinderGeometry(0.9, 0.9, 1.6, 32, 12, true, 0, Math.PI);
+
+        // SphereGeometry 객체를 생성하는데 필요한 인자
+        // 반지름, 수평방향 분할값, 수직방향 분할값, 수평방향 시작각도, 구성각도, 수직방향 시작각도, 구성각도, 
+        //const geometry = new Three.SphereGeometry(0.9, 32, 12, 0, Math.PI, 0, Math.PI/2);
+
+        // RingGeometry 객체를 생성하는데 필요한 인자
+        // 내부 반지름, 외부 반지름, 가장자리 둘레방향 분할수, 내부방향에 대한 분할수, 시작각도, 구성각도
+        //const geometry = new Three.RingGeometry(0.2, 1, 6, 2, 0, Math.PI);
+
+        // PlaneGeometry 객체를 생성하는데 필요한 인자
+        // width, height, width 방향 분할, height 방향 분할
+        // PlaneGeometry GIS에서 3차원 지형 표현에서 유용하게 사용된다.
+        //const geometry = new Three.PlaneGeometry(1, 1.4, 2, 3);
+
+        // TorusGeometry 객체를 생성하는데 필요한 인자
+        // Torus 반지름, 튜브 반지름, 방사방향 분할수, 긴원통에 대한 분할수, Torus 구성각도
+        //const geometry = new Three.TorusGeometry(0.9, 0.4, 24, 32, Math.PI);
+
+        // TorusKnotGeometry : 활용도는 떨어진다.
+        const geometry = new Three.TorusKnotGeometry(0.6, 0.1, 64, 32, 3, 4);
         const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
         const cube = new Three.Mesh(geometry, fillMaterial);
 
