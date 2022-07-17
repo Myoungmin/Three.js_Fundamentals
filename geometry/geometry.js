@@ -76,19 +76,26 @@ class App {
     }
 
     _setupModel() {
-        // 정육면체 Geometry 객체 생성
-        // width, height, depth 인자를 모두 1로 설정하여 생성한다.
+        // 큐브모양 geometry, 회색 material를 이용하여 Mesh 객체 생성 
         const geometry = new Three.BoxGeometry(1, 1, 1);
-        // 파란색 material 생성
-        const material = new Three.MeshPhongMaterial({ color: 0x44a88 });
+        const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
+        const cube = new Three.Mesh(geometry, fillMaterial);
 
-        // Geometry와 Material를 이용하여 Mesh가 생성된다.
-        const cube = new Three.Mesh(geometry, material);
+        // 노란색 선 Material 생성
+        const lineMaterial = new Three.LineBasicMaterial({ color: 0xffff00 });
+        // 노란색 선 Material과 생성했던 큐브 geometry를 이용하여 LineSegments 객체 생성
+        // WireframeGeometry를 적용해야 모델의 모든 외곽선이 정상적으로 표시된다.
+        const line = new Three.LineSegments(new Three.WireframeGeometry(geometry), lineMaterial);
 
-        // 생성한 Mesh를 Scene 객체에 구가
-        this._scene.add(cube);
+        // Mesh 객체와 LineSegment 객체를 하나로 다루기위해 Group 객체로 묶는다.
+        const group = new Three.Group();
+        group.add(cube);
+        group.add(line);
+
+        // 생성한 Group를 Scene 객체에 구가
+        this._scene.add(group);
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
-        this._cube = cube;
+        this._cube = group;
     }
 
     resize() {
