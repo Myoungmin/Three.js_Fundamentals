@@ -79,29 +79,56 @@ class App {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
-    // MeshBasicMaterial 사용하는 _setupModel 메서드
-    _setupModel() {
-        // MeshBasicMaterial은 지정된 색상으로 렌더링한다.
-        const material = new Three.MeshBasicMaterial({
-            // Material을 상속받으므로 Material 속성을 설정할 수 있다.
-            // 아래는 기본값 설정들
-            visible: true,
-            transparent: true,
-            // transparent가 true일때만 적용되는 값, 값이 작아질수록 투명해진다.
-            opacity: 0.5,
-            // 픽셀을 깊이버퍼로 검사할지 여부
-            depthTest: true,
-            // 렌더링 되는 Mesh에 픽셀에 대한 z값을 깊이버퍼에 기록할지 여부
-            dapthWrite: true,
-            // Mesh를 구성하는 삼각형 면에 대해 앞, 뒷면 렌더링 여부 결정
-            // 기본은 Three.FrontSide로 설정되어 앞면만 렌더링된다.
-            side: Three.FrontSide,
+    // // MeshBasicMaterial 사용하는 _setupModel 메서드
+    // _setupModel() {
+    //     // MeshBasicMaterial은 지정된 색상으로 렌더링한다.
+    //     const material = new Three.MeshBasicMaterial({
+    //         // Material을 상속받으므로 Material 속성을 설정할 수 있다.
+    //         // 아래는 기본값 설정들
+    //         visible: true,
+    //         transparent: true,
+    //         // transparent가 true일때만 적용되는 값, 값이 작아질수록 투명해진다.
+    //         opacity: 0.5,
+    //         // 픽셀을 깊이버퍼로 검사할지 여부
+    //         depthTest: true,
+    //         // 렌더링 되는 Mesh에 픽셀에 대한 z값을 깊이버퍼에 기록할지 여부
+    //         dapthWrite: true,
+    //         // Mesh를 구성하는 삼각형 면에 대해 앞, 뒷면 렌더링 여부 결정
+    //         // 기본은 Three.FrontSide로 설정되어 앞면만 렌더링된다.
+    //         side: Three.FrontSide,
 
-            color: 0xffff00,
-            // Mesh를 선 형태로 렌더링 할지 여부
+    //         color: 0xffff00,
+    //         // Mesh를 선 형태로 렌더링 할지 여부
+    //         wireframe: false,
+    //     });
+    //     ////////////////////////////////////////////////////////////////////////////////
+
+    //     const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1), material);
+    //     box.position.set(-1, 0, 0);
+    //     this._scene.add(box);
+
+    //     const sphere = new Three.Mesh(new Three.SphereGeometry(0.7, 32, 32), material);
+    //     sphere.position.set(1, 0, 0);
+    //     this._scene.add(sphere);
+    // }
+    ////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // MeshLambertMaterial 사용하는 _setupModel 메서드
+    _setupModel() {
+        // MeshLambertMaterial는 Mesh를 구성하는 정점에서 광원을 계산하는 Material이다.
+        const material = new Three.MeshLambertMaterial({
+            transparent: true,
+            opacity: 0.5,
+            side: Three.DoubleSide,
+
+            color: "#d25383",
+            // 다른 광원에 영향을 받지않는 Material 자체에서 방출하는 색상값
+            // 기본값은 검정색으로 어떠한 색상도 방출하지 않는다.
+            emissive: 0x555500,
             wireframe: false,
-        });
-        ////////////////////////////////////////////////////////////////////////////////
+        })
 
         const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1), material);
         box.position.set(-1, 0, 0);
