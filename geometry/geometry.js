@@ -79,8 +79,9 @@ class App {
     }
 
     _setupModel() {
-        // 큐브모양 geometry, 회색 material를 이용하여 Mesh 객체 생성 
-        const geometry = new Three.BoxGeometry(1, 1, 1);
+        // 큐브모양 geometry, 회색 material를 이용하여 Mesh 객체 생성
+        // BoxGeometry에 width, height, depth 모두 2분할 적용
+        const geometry = new Three.BoxGeometry(1, 1, 1, 2, 2, 2);
         const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
         const cube = new Three.Mesh(geometry, fillMaterial);
 
