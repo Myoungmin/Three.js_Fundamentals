@@ -1,4 +1,5 @@
 import * as Three from '../three.module.js';
+import { OrbitControls } from '../OrbitControls.js';
 
 class App {
     constructor() {
@@ -32,6 +33,8 @@ class App {
         this._setupLight();
         // 3D 모델 설정
         this._setupModel();
+        // OrbitControls 클래스 사용
+        this._setupControls();
 
         // 창 크기가 변경될 때 발생하는 이벤트인 onresize에 App 클래스의 resize 메서드를 연결한다.
         // this가 가리키는 객체가 이벤트 객체가 아닌 App클래스 객체가 되도록 하기 위해 bind로 설정한다.
@@ -98,6 +101,11 @@ class App {
         this._cube = group;
     }
 
+    _setupControls() {
+        // OrbitControls 객체를 생성하기 위해서는 Camera 객체와 마우스 이벤트를 받는 DOM 요소가 필요하다.
+        new OrbitControls(this._camera, this._divContainer);
+    }
+
     resize() {
         // 3D 그래픽을 출력할 영역 width, height 얻어오기
         const width = this._divContainer.clientWidth;
@@ -125,8 +133,8 @@ class App {
         // 밀리초에서 초로 변환
         time *= 0.001;
         // 시간값으로 큐브 회전
-        this._cube.rotation.x = time;
-        this._cube.rotation.y = time;
+        //this._cube.rotation.x = time;
+        //this._cube.rotation.y = time;
     }
 }
 
