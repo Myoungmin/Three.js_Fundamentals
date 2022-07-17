@@ -1,5 +1,7 @@
-import * as Three from '../three.module.js';
-import { OrbitControls } from '../OrbitControls.js';
+import * as Three from '../three.js/three.module.js';
+import { OrbitControls } from '../three.js/OrbitControls.js';
+import { FontLoader } from "../three.js/FontLoader.js"
+import { TextGeometry } from "../three.js/TextGeometry.js"
 
 class App {
     constructor() {
@@ -60,7 +62,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 15;
+        camera.position.z = 50;
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._camera = camera;
     }
@@ -241,34 +243,83 @@ class App {
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Vector2 배열을 이용하여 LatheGeometry 생성, Mesh를 구성하는 _setupModel 메서드
+    // _setupModel() {
+    //     const points = [];
+    //     for (let i = 0; i < 10; ++i) {
+    //         points.push(new Three.Vector2(Math.sin(i * 0.2) * 3 + 3, (i - 5) * 0.8));
+    //     }
+
+    //     // Vector2 배열을 이용하여 LatheGeometry를 생성한다.
+    //     const geometry = new Three.LatheGeometry(points);
+
+    //     // LatheGeometry 객체와 MeshPhongMaterial 객체를 이용하여 Mesh 객체 생성
+    //     const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
+    //     const lathe = new Three.Mesh(geometry, fillMaterial);
+
+    //     // 노란색 선 Material 생성
+    //     const lineMaterial = new Three.LineBasicMaterial({ color: 0xffff00 });
+    //     // 노란색 선 Material과 생성했던 큐브 geometry를 이용하여 LineSegments 객체 생성
+    //     // WireframeGeometry를 적용해야 모델의 모든 외곽선이 정상적으로 표시된다.
+    //     const line = new Three.LineSegments(new Three.WireframeGeometry(geometry), lineMaterial);
+
+    //     // Mesh 객체와 LineSegment 객체를 하나로 다루기위해 Group 객체로 묶는다.
+    //     const group = new Three.Group();
+    //     group.add(lathe);
+    //     group.add(line);
+
+    //     // 생성한 Group를 Scene 객체에 구가
+    //     this._scene.add(group);
+    //     // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
+    //     this._lathe = group;
+    // }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // FontLoader로 Font를 로드하고 TextGeometry를 생성, Mesh를 구성하는 _setupModel 메서드
     _setupModel() {
-        const points = [];
-        for (let i = 0; i < 10; ++i) {
-            points.push(new Three.Vector2(Math.sin(i * 0.2) * 3 + 3, (i - 5) * 0.8));
-        }
+        const fontLoader = new FontLoader();
+        // 비동기적으로 Font를 load하는 함수
+        async function loadFont(that) {
+            const url = "../three.js/helvetiker_regular.typeface.json";
+            const font = await new Promise((resolve, reject) => {
+                fontLoader.load(url, resolve, undefined, reject);
+            })
 
-        // Vector2 배열을 이용하여 LatheGeometry를 생성한다.
-        const geometry = new Three.LatheGeometry(points);
+            // FontLoader로 Font를 로드하고 TextGeometry를 생성한다.
+            const geometry = new TextGeometry("Myoung-min", {
+                font: font,
+                size: 5,
+                height: 1.5,
+                curveSegment: 50,
+                // setting for ExtrudeGeometry
+                bevelEnabled: true,
+                bevelThickness: 0.5,
+                bevelSize: .7,
+                bevelSegements: 7
+            });
 
-        // LatheGeometry 객체와 MeshPhongMaterial 객체를 이용하여 Mesh 객체 생성
-        const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
-        const lathe = new Three.Mesh(geometry, fillMaterial);
+            // TextGeometry 객체와 MeshPhongMaterial 객체를 이용하여 Mesh 객체 생성
+            const fillMaterial = new Three.MeshPhongMaterial({ color: 0x515151 });
+            const text = new Three.Mesh(geometry, fillMaterial);
 
-        // 노란색 선 Material 생성
-        const lineMaterial = new Three.LineBasicMaterial({ color: 0xffff00 });
-        // 노란색 선 Material과 생성했던 큐브 geometry를 이용하여 LineSegments 객체 생성
-        // WireframeGeometry를 적용해야 모델의 모든 외곽선이 정상적으로 표시된다.
-        const line = new Three.LineSegments(new Three.WireframeGeometry(geometry), lineMaterial);
+            // 노란색 선 Material 생성
+            const lineMaterial = new Three.LineBasicMaterial({ color: 0xffff00 });
+            // 노란색 선 Material과 생성했던 geometry를 이용하여 LineSegments 객체 생성
+            // WireframeGeometry를 적용해야 모델의 모든 외곽선이 정상적으로 표시된다.
+            const line = new Three.LineSegments(new Three.WireframeGeometry(geometry), lineMaterial);
 
-        // Mesh 객체와 LineSegment 객체를 하나로 다루기위해 Group 객체로 묶는다.
-        const group = new Three.Group();
-        group.add(lathe);
-        group.add(line);
+            // Mesh 객체와 LineSegment 객체를 하나로 다루기위해 Group 객체로 묶는다.
+            const group = new Three.Group();
+            group.add(text);
+            group.add(line);
 
-        // 생성한 Group를 Scene 객체에 구가
-        this._scene.add(group);
-        // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
-        this._lathe = group;
+            // 이름이 중앙에 표출이 안되어 translate 해줬다.
+            group.translateX(-20);
+
+            // 생성한 Group를 Scene 객체에 추가
+            that._scene.add(group);
+        };
+        loadFont(this);
     }
 
 
