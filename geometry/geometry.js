@@ -60,7 +60,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 2;
+        camera.position.z = 15;
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._camera = camera;
     }
@@ -134,18 +134,52 @@ class App {
     //     this._cube = group;
     // }
 
-    _setupModel() {
-        // Shape 객체 생성해서 사각형 모양 그리기
-        const shape = new Three.Shape();
-        shape.moveTo(1, 1);
-        shape.lineTo(1, -1);
-        shape.lineTo(-1, -1);
-        shape.lineTo(-1, 1);
-        shape.closePath();
+    // // Shape 클래스를 이용하여 사각형 그리는 _setupModel 메서드
+    // _setupModel() {
+    //     // Shape 객체 생성해서 사각형 모양 그리기
+    //     const shape = new Three.Shape();
+    //     shape.moveTo(1, 1);
+    //     shape.lineTo(1, -1);
+    //     shape.lineTo(-1, -1);
+    //     shape.lineTo(-1, 1);
+    //     shape.closePath();
 
-        // BufferGeometry를 생성하고 Shape 객체에서 Point들을 가져와 설정
+    //     // BufferGeometry를 생성하고 Shape 객체에서 Point들을 가져와 설정
+    //     const geometry = new Three.BufferGeometry();
+    //     const points = shape.getPoints();
+    //     geometry.setFromPoints(points);
+
+    //     // LineBasicMaterial로 Line 색 설정
+    //     const material = new Three.LineBasicMaterial({ color: 0xffff00 });
+    //     // BufferGeometry와 LineBasicMaterial로 Line 객체를 생성한다.
+    //     const line = new Three.Line(geometry, material);
+
+    //     // 생성한 Line 객체 Scene에 추가
+    //     this._scene.add(line);
+    // }
+
+
+    _setupModel() {
+        // Curve 클래스를 상속받은 CustomSinCurve 정의
+        class CustomSinCurve extends Three.Curve {
+            constructor(scale) {
+                super();
+                this.scale = scale;
+            }
+            getPoint(t) {
+                const tx = t * 3 - 1.5;
+                const ty = Math.sin(2 * Math.PI * t);
+                const tz = 0;
+                return new Three.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+            }
+        }
+
+        const path = new CustomSinCurve(4);
+
+        // BufferGeometry를 생성하고 CustomSinCurve 객체에서 Point들을 가져와 설정
         const geometry = new Three.BufferGeometry();
-        const points = shape.getPoints();
+        // Curve를 구성하는 좌표의 개수를 크게 설정할 수록 좀 더 부드러운 선이 그려진다.
+        const points = path.getPoints(50);
         geometry.setFromPoints(points);
 
         // LineBasicMaterial로 Line 색 설정
@@ -156,6 +190,7 @@ class App {
         // 생성한 Line 객체 Scene에 추가
         this._scene.add(line);
     }
+
 
     _setupControls() {
         // OrbitControls 객체를 생성하기 위해서는 Camera 객체와 마우스 이벤트를 받는 DOM 요소가 필요하다.
