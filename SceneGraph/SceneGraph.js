@@ -57,7 +57,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 50;
+        camera.position.z = 25;
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._camera = camera;
     }
@@ -123,6 +123,10 @@ class App {
         moonMesh.scale.set(0.5, 0.5, 0.5);
         // moonOrbit Object3D에 달 Mesh 추가
         moonOrbit.add(moonMesh);
+
+        this._solarSystem = solarSystem;
+        this._earthOrbit = earthOrbit;
+        this._moonOrbit = moonOrbit;
     }
 
     resize() {
@@ -151,9 +155,13 @@ class App {
     update(time) {
         // 밀리초에서 초로 변환
         time *= 0.001;
-        // 시간값으로 큐브 회전
-        this._cube.rotation.x = time;
-        this._cube.rotation.y = time;
+        
+        // 태양이 자전하도록 설정, 지구가 태양을 공전하는 효과를 주게된다.
+        this._solarSystem.rotation.y = time / 2;
+        // 지구가 자전하도록 설정, 달이 지구를 공전하는 효과를 주게된다.
+        this._earthOrbit.rotation.y = time * 2;
+        // 달이 자전하도록 설정
+        this._moonOrbit.rotation.y = time * 5;
     }
 }
 
