@@ -60,7 +60,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 7;
+        camera.position.z = 3;
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._camera = camera;
     }
@@ -79,94 +79,37 @@ class App {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
-    // PointsMaterial로 Points 객체를 생성하는 _setupModel 메서드
-    // _setupModel() {
-    //     const vertices = [];
-    //     // 1000개의 좌표를 -5 ~ 5 사이의 랜덤 값으로 설정
-    //     for (let i = 0; i < 10000; i++) {
-    //         const x = Three.MathUtils.randFloatSpread(5);
-    //         const y = Three.MathUtils.randFloatSpread(5);
-    //         const z = Three.MathUtils.randFloatSpread(5);
-
-    //         vertices.push(x, y, z);
-    //     }
-
-    //     // BufferGeometry 객체 생성
-    //     const geometry = new Three.BufferGeometry();
-    //     // "position"으로 위치 좌표 데이터임을 알려준다.
-    //     // buffer에 담기는 데이터의 3개의 값이 하나의 좌표라는 Attribute 설정으로 알려준다.
-    //     geometry.setAttribute(
-    //         "position",
-    //         new Three.Float32BufferAttribute(vertices, 3),
-    //     )        
-
-    //     /////// PointsMaterial 객체 생성 ///////////////////////////////////////////////
-
-    //     const sprite = new Three.TextureLoader().load("../three.js/disc.png");
-
-    //     // const material = new Three.PointsMaterial({
-    //     //     color: "#00ffff",
-    //     //     size: 0.1,
-    //     //     // 카메라 위치에 따라 포인트 크기를 다르게 할지
-    //     //     sizeAttenuation: true,
-    //     // })
-
-    //     // PointMaterial에 texture를 읽어와 적용하여 원이 그려지도록 설정
-    //     const material = new Three.PointsMaterial({
-    //         map: sprite,
-    //         // 알파값이 alphaTest 값보다 클때만 픽셀이 렌더링된다.
-    //         alphaTest: 0.5,
-
-    //         color: "#00ffff",
-    //         size: 0.1,
-    //         // 카메라 위치에 따라 포인트 크기를 다르게 할지
-    //         sizeAttenuation: true,
-    //     })
-
-    //     ////////////////////////////////////////////////////////////////////////////////
-
-    //     // BufferGeometry, PointsMaterial로 Points 객체를 생성한다.
-    //     const points = new Three.Points(geometry, material);
-    //     this._scene.add(points);
-    // }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////
-    // LineBasicMaterial, LineDashedMaterial로 Line, LineSegments, LineLoop 객체 생성 실습
+    // MeshBasicMaterial 사용하는 _setupModel 메서드
     _setupModel() {
-        const vertices = [
-            -1, 1, 0,
-            1, 1, 0,
-            -1, -1, 0,
-            1, -1, 0,
-        ];
+        // MeshBasicMaterial은 지정된 색상으로 렌더링한다.
+        const material = new Three.MeshBasicMaterial({
+            // Material을 상속받으므로 Material 속성을 설정할 수 있다.
+            // 아래는 기본값 설정들
+            visible: true,
+            transparent: true,
+            // transparent가 true일때만 적용되는 값, 값이 작아질수록 투명해진다.
+            opacity: 0.5,
+            // 픽셀을 깊이버퍼로 검사할지 여부
+            depthTest: true,
+            // 렌더링 되는 Mesh에 픽셀에 대한 z값을 깊이버퍼에 기록할지 여부
+            dapthWrite: true,
+            // Mesh를 구성하는 삼각형 면에 대해 앞, 뒷면 렌더링 여부 결정
+            // 기본은 Three.FrontSide로 설정되어 앞면만 렌더링된다.
+            side: Three.FrontSide,
 
-        const geometry = new Three.BufferGeometry();
-        geometry.setAttribute("position", new Three.Float32BufferAttribute(vertices, 3));
-
-        // const material = new Three.LineBasicMaterial({
-        //     color: 0xff0000,
-        // });
-
-        const material = new Three.LineDashedMaterial({
             color: 0xffff00,
-            // dashSize 만큼 선이 그려진다.
-            dashSize: 0.2,
-            // gapSize 만큼 선이 안그려진다.
-            gapSize: 0.1,
-            // 커질수록 촘촘해진다.
-            scale: 4,
-        })
+            // Mesh를 선 형태로 렌더링 할지 여부
+            wireframe: false,
+        });
+        ////////////////////////////////////////////////////////////////////////////////
 
-        // Line, LineSegments, LineLoop 각각의 객체 생성하면 어떻게 표현되는지 확인
-        const line = new Three.Line(geometry, material);
-        //const line = new Three.LineSegments(geometry, material);
-        //const line = new Three.LineLoop(geometry, material);
+        const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1), material);
+        box.position.set(-1, 0, 0);
+        this._scene.add(box);
 
-        // LineDashedMaterial를 사용 시 추가해 줘야 한다.
-        line.computeLineDistances();
-
-        this._scene.add(line);
+        const sphere = new Three.Mesh(new Three.SphereGeometry(0.7, 32, 32), material);
+        sphere.position.set(1, 0, 0);
+        this._scene.add(sphere);
     }
     ////////////////////////////////////////////////////////////////////////////////////
 
