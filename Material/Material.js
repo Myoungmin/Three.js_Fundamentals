@@ -1,5 +1,5 @@
 import * as Three from '../three.js/three.module.js';
-import {OrbitControls}  from '../three.js/OrbitControls.js'
+import { OrbitControls } from '../three.js/OrbitControls.js'
 
 class App {
     constructor() {
@@ -78,56 +78,100 @@ class App {
         this._scene.add(light);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    // PointsMaterial로 Points 객체를 생성하는 _setupModel 메서드
+    // _setupModel() {
+    //     const vertices = [];
+    //     // 1000개의 좌표를 -5 ~ 5 사이의 랜덤 값으로 설정
+    //     for (let i = 0; i < 10000; i++) {
+    //         const x = Three.MathUtils.randFloatSpread(5);
+    //         const y = Three.MathUtils.randFloatSpread(5);
+    //         const z = Three.MathUtils.randFloatSpread(5);
+
+    //         vertices.push(x, y, z);
+    //     }
+
+    //     // BufferGeometry 객체 생성
+    //     const geometry = new Three.BufferGeometry();
+    //     // "position"으로 위치 좌표 데이터임을 알려준다.
+    //     // buffer에 담기는 데이터의 3개의 값이 하나의 좌표라는 Attribute 설정으로 알려준다.
+    //     geometry.setAttribute(
+    //         "position",
+    //         new Three.Float32BufferAttribute(vertices, 3),
+    //     )        
+
+    //     /////// PointsMaterial 객체 생성 ///////////////////////////////////////////////
+
+    //     const sprite = new Three.TextureLoader().load("../three.js/disc.png");
+
+    //     // const material = new Three.PointsMaterial({
+    //     //     color: "#00ffff",
+    //     //     size: 0.1,
+    //     //     // 카메라 위치에 따라 포인트 크기를 다르게 할지
+    //     //     sizeAttenuation: true,
+    //     // })
+
+    //     // PointMaterial에 texture를 읽어와 적용하여 원이 그려지도록 설정
+    //     const material = new Three.PointsMaterial({
+    //         map: sprite,
+    //         // 알파값이 alphaTest 값보다 클때만 픽셀이 렌더링된다.
+    //         alphaTest: 0.5,
+
+    //         color: "#00ffff",
+    //         size: 0.1,
+    //         // 카메라 위치에 따라 포인트 크기를 다르게 할지
+    //         sizeAttenuation: true,
+    //     })
+
+    //     ////////////////////////////////////////////////////////////////////////////////
+
+    //     // BufferGeometry, PointsMaterial로 Points 객체를 생성한다.
+    //     const points = new Three.Points(geometry, material);
+    //     this._scene.add(points);
+    // }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // LineBasicMaterial, LineDashedMaterial로 Line, LineSegments, LineLoop 객체 생성 실습
     _setupModel() {
-        const vertices = [];
-        // 1000개의 좌표를 -5 ~ 5 사이의 랜덤 값으로 설정
-        for (let i = 0; i < 10000; i++) {
-            const x = Three.MathUtils.randFloatSpread(5);
-            const y = Three.MathUtils.randFloatSpread(5);
-            const z = Three.MathUtils.randFloatSpread(5);
+        const vertices = [
+            -1, 1, 0,
+            1, 1, 0,
+            -1, -1, 0,
+            1, -1, 0,
+        ];
 
-            vertices.push(x, y, z);
-        }
-
-        // BufferGeometry 객체 생성
         const geometry = new Three.BufferGeometry();
-        // "position"으로 위치 좌표 데이터임을 알려준다.
-        // buffer에 담기는 데이터의 3개의 값이 하나의 좌표라는 Attribute 설정으로 알려준다.
-        geometry.setAttribute(
-            "position",
-            new Three.Float32BufferAttribute(vertices, 3),
-        )        
+        geometry.setAttribute("position", new Three.Float32BufferAttribute(vertices, 3));
 
-        /////// PointsMaterial 객체 생성 ///////////////////////////////////////////////
-        
-        const sprite = new Three.TextureLoader().load("../three.js/disc.png");
+        // const material = new Three.LineBasicMaterial({
+        //     color: 0xff0000,
+        // });
 
-        // const material = new Three.PointsMaterial({
-        //     color: "#00ffff",
-        //     size: 0.1,
-        //     // 카메라 위치에 따라 포인트 크기를 다르게 할지
-        //     sizeAttenuation: true,
-        // })
-
-        const material = new Three.PointsMaterial({
-            map: sprite,
-            // 알파값이 alphaTest 값보다 클때만 픽셀이 렌더링된다.
-            alphaTest: 0.5,
-
-            color: "#00ffff",
-            size: 0.1,
-            // 카메라 위치에 따라 포인트 크기를 다르게 할지
-            sizeAttenuation: true,
+        const material = new Three.LineDashedMaterial({
+            color: 0xffff00,
+            // dashSize 만큼 선이 그려진다.
+            dashSize: 0.2,
+            // gapSize 만큼 선이 안그려진다.
+            gapSize: 0.1,
+            // 커질수록 촘촘해진다.
+            scale: 4,
         })
 
-        ////////////////////////////////////////////////////////////////////////////////
+        // Line, LineSegments, LineLoop 각각의 객체 생성하면 어떻게 표현되는지 확인
+        const line = new Three.Line(geometry, material);
+        //const line = new Three.LineSegments(geometry, material);
+        //const line = new Three.LineLoop(geometry, material);
 
-        // BufferGeometry, PointsMaterial로 Points 객체를 생성한다.
-        const points = new Three.Points(geometry, material);
-        this._scene.add(points);
+        // LineDashedMaterial를 사용 시 추가해 줘야 한다.
+        line.computeLineDistances();
+
+        this._scene.add(line);
     }
+    ////////////////////////////////////////////////////////////////////////////////////
 
-    _setupControls(){
+
+    _setupControls() {
         new OrbitControls(this._camera, this._divContainer);
     }
 
