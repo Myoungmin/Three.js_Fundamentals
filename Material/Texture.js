@@ -172,26 +172,38 @@ class App {
 
         const material = new Three.MeshStandardMaterial({
             map: map,
+
             // normalMap : 법선 벡터를 이미지화 해서 저장해 둔 것
             normalMap: mapNormal,
 
+            // displacementMap : 실제로 mesh의 지오메트리의 좌표를 변형시켜 입체감을 표현
+            // 이 맵 이미지의 픽셀값이 밝을 수록 좌표의 변위가 커진다.
+            // displacementMap이 실제 지오메트리의 구성 좌표를 변경시키기 때문에 표면에 대한 구성 좌표가 제공되어져야 한다.
+            // 이를 위해 지오메트리 표면을 여러 개의 면으로 분할시켜줘야 한다.
+            displacementMap: mapHeight,
+            // 변위 효과를 20%만 적용
+            displacementScale: 0.2,
+            // 변위에의해 박스가 분리되는 것을 조정
+            displacementBias: -0.15,
+
         });
 
-        const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1), material);
+        // displacementMap 적용을 위해 지오메트리 표면을 여러 개의 면으로 분할시켜줘야 한다.
+        const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1, 256, 256, 256), material);
         box.position.set(-1, 0, 0);
         this._scene.add(box);
 
-        // VertexNormalsHelper로 법선 표시
-        const boxHelper = new VertexNormalsHelper(box, 0.1, 0xffff00);
-        this._scene.add(boxHelper);
+        // // VertexNormalsHelper로 법선 표시
+        // const boxHelper = new VertexNormalsHelper(box, 0.1, 0xffff00);
+        // this._scene.add(boxHelper);
 
-        const sphere = new Three.Mesh(new Three.SphereGeometry(0.7, 32, 32), material);
+        const sphere = new Three.Mesh(new Three.SphereGeometry(0.7, 512, 512), material);
         sphere.position.set(1, 0, 0);
         this._scene.add(sphere);
 
         // // VertexNormalsHelper로 법선 표시
-        const sphereHelper = new VertexNormalsHelper(sphere, 0.1, 0xffff00);
-        this._scene.add(sphereHelper);
+        // const sphereHelper = new VertexNormalsHelper(sphere, 0.1, 0xffff00);
+        // this._scene.add(sphereHelper);
     }
     ////////////////////////////////////////////////////////////////////////////////////
 
