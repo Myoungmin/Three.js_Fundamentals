@@ -115,18 +115,46 @@ class App {
 
 
     ////////////////////////////////////////////////////////////////////////////////////
-    // MeshLambertMaterial 사용하는 _setupModel 메서드
-    _setupModel() {
-        // MeshLambertMaterial는 Mesh를 구성하는 정점에서 광원을 계산하는 Material이다.
-        const material = new Three.MeshLambertMaterial({
-            transparent: true,
-            opacity: 0.5,
-            side: Three.DoubleSide,
+    // // MeshLambertMaterial 사용하는 _setupModel 메서드
+    // _setupModel() {
+    //     // MeshLambertMaterial는 Mesh를 구성하는 정점에서 광원을 계산하는 Material이다.
+    //     const material = new Three.MeshLambertMaterial({
+    //         transparent: true,
+    //         opacity: 0.5,
+    //         side: Three.DoubleSide,
 
-            color: "#d25383",
-            // 다른 광원에 영향을 받지않는 Material 자체에서 방출하는 색상값
-            // 기본값은 검정색으로 어떠한 색상도 방출하지 않는다.
-            emissive: 0x555500,
+    //         color: "#d25383",
+    //         // 다른 광원에 영향을 받지않는 Material 자체에서 방출하는 색상값
+    //         // 기본값은 검정색으로 어떠한 색상도 방출하지 않는다.
+    //         emissive: 0x555500,
+    //         wireframe: false,
+    //     })
+
+    //     const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1), material);
+    //     box.position.set(-1, 0, 0);
+    //     this._scene.add(box);
+
+    //     const sphere = new Three.Mesh(new Three.SphereGeometry(0.7, 32, 32), material);
+    //     sphere.position.set(1, 0, 0);
+    //     this._scene.add(sphere);
+    // }
+    ////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // MeshPhongMaterial 사용하는 _setupModel 메서드
+    _setupModel() {
+        // MeshPhongMaterial은 mesh가 렌더링되는 픽셀 단위로 광원의 영향을 계산하는 재질
+        const material = new Three.MeshPhongMaterial({
+            color: 0xff0000,
+            // 다른 광원에 영향을 받지 않는 재질 자체에서 방출하는 색상 값
+            emissive: 0x000000,
+            // 광원에 의해 반사되는 색상으로 기본값은 연한 회색이다
+            specular: 0xffff00,
+            // 반사되는 정도
+            shiness: 10,
+            // 평평한 모양으로 렌더링
+            flatShading: true,
             wireframe: false,
         })
 
