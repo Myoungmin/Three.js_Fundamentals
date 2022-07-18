@@ -79,14 +79,60 @@ class App {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
-    // MeshStandardMaterial 사용하고 Texture 속성 없이 Texture를 맵핑하는 _setupModel 메서드
+    // // MeshStandardMaterial 사용하고 Texture 속성 없이 Texture를 맵핑하는 _setupModel 메서드
+    // _setupModel() {
+    //     const textureLoader = new Three.TextureLoader();
+    //     const map = textureLoader.load(
+    //         // 이미지 경로 지정
+    //         "../three.js/uv_grid_opengl.jpg",
+    //         // 텍스처 로드가 성공되면 호출되는 콜백함수 설정
+    //         texture => { }
+    //     );
+
+    //     const material = new Three.MeshStandardMaterial({
+    //         map: map,
+    //     });
+
+    //     const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1), material);
+    //     box.position.set(-1, 0, 0);
+    //     this._scene.add(box);
+
+    //     const sphere = new Three.Mesh(new Three.SphereGeometry(0.7, 32, 32), material);
+    //     sphere.position.set(1, 0, 0);
+    //     this._scene.add(sphere);
+    // }
+    ////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // Texture 속성을 설정하는 _setupModel 메서드
+    // 텍스처의 속성은 텍스처 객체가 생성된 이후에 설정되어야 한다.
+    // 이 메서드에서는 텍스처 객체 생성이 완료된 직후에 호출되는 콜백함수에서 설정하는 방법을 선택하였다.
     _setupModel() {
         const textureLoader = new Three.TextureLoader();
         const map = textureLoader.load(
             // 이미지 경로 지정
             "../three.js/uv_grid_opengl.jpg",
             // 텍스처 로드가 성공되면 호출되는 콜백함수 설정
-            texture => { }
+            texture => {
+                // x, y축 방향으로 동일한 이미지가 4번씩 반복된다.
+                texture.repeat.x = 4;
+                texture.repeat.y = 4;
+
+                //texture.wrapS = Three.RepeatWrapping;
+                //texture.wrapT = Three.RepeatWrapping;
+                texture.wrapS = Three.MirroredRepeatWrapping;
+                texture.wrapT = Three.MirroredRepeatWrapping;
+
+                //// 텍스처 이미지가 렌더링될 때 사용할 필터에 대한 속성
+                // 텍스처 이미지의 원래 크기보다 더 크게 확대되어 렌더링될때 사용하는 magFilter, 기본값은 LinearFilter이다.
+                texture.magFilter = Three.LinearFilter;
+                // 텍스처 이미지의 원래 크기보다 축소될 때 사용하는 minFilter, 기본값은 NearestMipMapLinearFilter이다.
+                texture.minFilter = Three.NearestMipMapLinearFilter;
+
+                // mipMap: 원래의 이미지 크기를 절반으로 줄여가며 미리 만들어 놓은 이미지 셋, 보통 mipMap을 사용한 경우가 렌더링 품질이 좋다.
+                // 하지만 밉멥의 생성을 위한 메모리 사용량이 상당하고 렌더링 시 하나의 픽셀값을 결정하는 계산에 필요한 연산량이 각 속성에 따라 모두 다르므로 사용하는 텍스처 맵핑의 크기 등에 따라서 적절한 minFilter의 속성값을 지정해서 사용해야 한다.
+            }
         );
 
         const material = new Three.MeshStandardMaterial({
