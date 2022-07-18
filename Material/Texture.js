@@ -79,10 +79,18 @@ class App {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
-    // MeshStandardMaterial 사용하는 _setupModel 메서드
+    // MeshStandardMaterial 사용하고 Texture 속성 없이 Texture를 맵핑하는 _setupModel 메서드
     _setupModel() {
-        const material = new Three.MeshStandardMaterial({
+        const textureLoader = new Three.TextureLoader();
+        const map = textureLoader.load(
+            // 이미지 경로 지정
+            "../three.js/uv_grid_opengl.jpg",
+            // 텍스처 로드가 성공되면 호출되는 콜백함수 설정
+            texture => { }
+        );
 
+        const material = new Three.MeshStandardMaterial({
+            map: map,
         });
 
         const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1), material);
