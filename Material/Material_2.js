@@ -142,19 +142,47 @@ class App {
 
 
     ////////////////////////////////////////////////////////////////////////////////////
-    // MeshPhongMaterial 사용하는 _setupModel 메서드
+    // // MeshPhongMaterial 사용하는 _setupModel 메서드
+    // _setupModel() {
+    //     // MeshPhongMaterial은 mesh가 렌더링되는 픽셀 단위로 광원의 영향을 계산하는 재질
+    //     const material = new Three.MeshPhongMaterial({
+    //         color: 0xff0000,
+    //         // 다른 광원에 영향을 받지 않는 재질 자체에서 방출하는 색상 값
+    //         emissive: 0x000000,
+    //         // 광원에 의해 반사되는 색상으로 기본값은 연한 회색이다
+    //         specular: 0xffff00,
+    //         // 반사되는 정도
+    //         shiness: 10,
+    //         // 평평한 모양으로 렌더링
+    //         flatShading: true,
+    //         wireframe: false,
+    //     })
+
+    //     const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1), material);
+    //     box.position.set(-1, 0, 0);
+    //     this._scene.add(box);
+
+    //     const sphere = new Three.Mesh(new Three.SphereGeometry(0.7, 32, 32), material);
+    //     sphere.position.set(1, 0, 0);
+    //     this._scene.add(sphere);
+    // }
+    ////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // MeshStandardMaterial 사용하는 _setupModel 메서드
     _setupModel() {
-        // MeshPhongMaterial은 mesh가 렌더링되는 픽셀 단위로 광원의 영향을 계산하는 재질
-        const material = new Three.MeshPhongMaterial({
+        // MeshStandardMaterial mesh가 렌더링되는 픽셀 단위로 광원의 영향을 계산하는 재질
+        const material = new Three.MeshStandardMaterial({
             color: 0xff0000,
             // 다른 광원에 영향을 받지 않는 재질 자체에서 방출하는 색상 값
             emissive: 0x000000,
-            // 광원에 의해 반사되는 색상으로 기본값은 연한 회색이다
-            specular: 0xffff00,
-            // 반사되는 정도
-            shiness: 10,
+            // 0은 표면이 거울과 같은 상태
+            roughness: 0.25,
+            // roughness가 1이면 이 값이 커져도 금속의 느낌을 주기 힘들다
+            metalness: 0.6,
             // 평평한 모양으로 렌더링
-            flatShading: true,
+            flatShading: false,
             wireframe: false,
         })
 
