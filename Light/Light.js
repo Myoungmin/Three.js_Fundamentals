@@ -26,7 +26,7 @@ class App {
         const scene = new Three.Scene();
         // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
         this._scene = scene;
-      
+
         // 카메라 객체를 구성
         this._setupCamera();
         // 조명 설정
@@ -145,7 +145,7 @@ class App {
         ////////////////////////////////////////////////////////////////////////////////
     }
 
-    _setupControls(){
+    _setupControls() {
         new OrbitControls(this._camera, this._divContainer);
     }
 
@@ -175,6 +175,13 @@ class App {
     update(time) {
         // 밀리초에서 초로 변환
         time *= 0.001;
+
+        // 이름 부여한 객체 가져오기
+        const smallSpherePivot = this._scene.getObjectByName("smallSpherePivot");
+        if (smallSpherePivot) {
+            // 작은 구 회전하도록 설정
+            smallSpherePivot.rotation.y = Three.MathUtils.degToRad(time * 50);
+        }
     }
 }
 
