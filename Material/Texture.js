@@ -207,7 +207,15 @@ class App {
             // metalnessMap : 금속 재질에 대한 느낌 부여
             metalnessMap: mapMetalic,
             // 기본값이 0이라 값을 높혀줘야 matalnessMap의 효과가 적용된다.
-            metalness: 0.5
+            metalness: 0.5,
+
+            // alphaMap : 투명도에 대한 맵 속성
+            // transparent를 활성화가 되어야 적용된다.
+            alphaMap: mapAlpha,
+            transparent: true,
+            // 투명한 부분을 봤을 때 뒷면도 볼 수 있도록 설정
+            side: Three.DoubleSide,
+
         });
 
         // displacementMap 적용을 위해 지오메트리 표면을 여러 개의 면으로 분할시켜줘야 한다.
