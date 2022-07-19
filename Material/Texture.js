@@ -198,6 +198,16 @@ class App {
             aoMap: mapAO,
             // aoMap 강도 설정
             aoMapIntensity: 10,
+
+            // roughnessMap : 거칠기에 대한 재질 적용
+            roughnessMap: mapRoughness,
+            // 값이 작아지면 거칠기가 낮아져서 더욱 반짝이는 플라스틱 느낌이 난다.
+            roughness: 0.5,
+
+            // metalnessMap : 금속 재질에 대한 느낌 부여
+            metalnessMap: mapMetalic,
+            // 기본값이 0이라 값을 높혀줘야 matalnessMap의 효과가 적용된다.
+            metalness: 0.5
         });
 
         // displacementMap 적용을 위해 지오메트리 표면을 여러 개의 면으로 분할시켜줘야 한다.
