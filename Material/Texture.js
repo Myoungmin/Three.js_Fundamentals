@@ -70,6 +70,11 @@ class App {
     }
 
     _setupLight() {
+        // aoMap이 적용되기 위해서 ambient light가 필요하다.
+        // ambient light : 모든 mesh의 전체 면에 대해서 균일하게 비추는 광원
+        const ambientLight = new Three.AmbientLight(0xffffff, 0.2);
+        this._scene.add(ambientLight);
+
         // 광원 색상 설정
         const color = 0xffffff;
         // 광원 세기 설정
@@ -186,11 +191,20 @@ class App {
             // 변위에의해 박스가 분리되는 것을 조정
             displacementBias: -0.15,
 
+            // aoMap : 텍스처 이미지에 미리 음영 효과를 그려넣은 것
+            // aoMap이 적용되기 위해서 ambient light가 필요하다.
+            // ambient light : 모든 mesh의 전체 면에 대해서 균일하게 비추는 광원
+            // aoMap이 적용되기 위해서 지오메트리 속성에 UV데이터를 지정해줘야 한다.
+            aoMap: mapAO,
+            // aoMap 강도 설정
+            aoMapIntensity: 10,
         });
 
         // displacementMap 적용을 위해 지오메트리 표면을 여러 개의 면으로 분할시켜줘야 한다.
         const box = new Three.Mesh(new Three.BoxGeometry(1, 1, 1, 256, 256, 256), material);
         box.position.set(-1, 0, 0);
+        // aoMap이 적용되기 위해서 지오메트리 속성에 UV데이터를 지정
+        box.geometry.attributes.uv2 = box.geometry.attributes.uv
         this._scene.add(box);
 
         // // VertexNormalsHelper로 법선 표시
@@ -199,6 +213,8 @@ class App {
 
         const sphere = new Three.Mesh(new Three.SphereGeometry(0.7, 512, 512), material);
         sphere.position.set(1, 0, 0);
+        // aoMap이 적용되기 위해서 지오메트리 속성에 UV데이터를 지정
+        sphere.geometry.attributes.uv2 = sphere.geometry.attributes.uv;
         this._scene.add(sphere);
 
         // // VertexNormalsHelper로 법선 표시
