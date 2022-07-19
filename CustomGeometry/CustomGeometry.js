@@ -96,9 +96,18 @@ class App {
             0, 0, 1,
         ]
 
+        // 각 정점에 대한 색상값 지정을 위한 배열
+        const rawColors = [
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1,
+            1, 1, 0,
+        ]
+
         // 배열을 Float32Array 클래스 객체 생성
         const positions = new Float32Array(rawPositions);
         const normals = new Float32Array(rawNormals);
+        const colors = new Float32Array(rawColors);
 
         // Buffergeometry 객체 생성
         const geometry = new Three.BufferGeometry();
@@ -107,6 +116,8 @@ class App {
         geometry.setAttribute("position", new Three.BufferAttribute(positions, 3));
         // "normal" 지정
         geometry.setAttribute("normal", new Three.BufferAttribute(normals, 3));
+        // "color" 지정
+        geometry.setAttribute("color", new Three.BufferAttribute(colors, 3));
 
         // "Vertex Index" 지정
         geometry.setIndex([
@@ -120,7 +131,11 @@ class App {
         // 자동으로 법선벡터 계산
         //geometry.computeVertexNormals();
 
-        const material = new Three.MeshPhongMaterial({ color: 0xff0000 });
+        const material = new Three.MeshPhongMaterial({
+            color: 0xffffff,
+            // 이 속성을 추가해야, 설정했던 "color" Attribute가 적용된다.
+            vertexColors: true,
+        });
 
         // mesh를 생성하고 scene에 추가
         const box = new Three.Mesh(geometry, material);
