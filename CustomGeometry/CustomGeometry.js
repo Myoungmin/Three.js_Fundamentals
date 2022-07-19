@@ -1,4 +1,6 @@
 import * as Three from '../three.js/three.module.js';
+import { VertexNormalsHelper } from '../three.js/VertexNormalsHelper.js';
+import { OrbitControls } from '../three.js/OrbitControls.js';
 
 class App {
     constructor() {
@@ -32,6 +34,7 @@ class App {
         this._setupLight();
         // 3D 모델 설정
         this._setupModel();
+        this._setControl();
 
         // 창 크기가 변경될 때 발생하는 이벤트인 onresize에 App 클래스의 resize 메서드를 연결한다.
         // this가 가리키는 객체가 이벤트 객체가 아닌 App클래스 객체가 되도록 하기 위해 bind로 설정한다.
@@ -116,15 +119,20 @@ class App {
 
         // 자동으로 법선벡터 계산
         //geometry.computeVertexNormals();
-        // 법선벡터를 직접 지정
-
-
 
         const material = new Three.MeshPhongMaterial({ color: 0xff0000 });
 
         // mesh를 생성하고 scene에 추가
         const box = new Three.Mesh(geometry, material);
         this._scene.add(box);
+
+        // mesh에 대해서 법선 벡터를 시각화하기 위해서 VertexNormalsHelper 클래스를 이용한다.
+        const helper = new VertexNormalsHelper(box, 0.1, 0xffff00);
+        this._scene.add(helper);
+    }
+
+    _setControl() {
+        new OrbitControls(this._camera, this._divContainer);
     }
 
     resize() {
