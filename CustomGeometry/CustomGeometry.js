@@ -104,10 +104,19 @@ class App {
             1, 1, 0,
         ]
 
+        // uv 좌표를 담고 있는 배열
+        const rawUVs = [
+            0, 0,
+            1, 0,
+            0, 1,
+            1, 1,
+        ]
+
         // 배열을 Float32Array 클래스 객체 생성
         const positions = new Float32Array(rawPositions);
         const normals = new Float32Array(rawNormals);
         const colors = new Float32Array(rawColors);
+        const uvs = new Float32Array(rawUVs);
 
         // Buffergeometry 객체 생성
         const geometry = new Three.BufferGeometry();
@@ -118,6 +127,8 @@ class App {
         geometry.setAttribute("normal", new Three.BufferAttribute(normals, 3));
         // "color" 지정
         geometry.setAttribute("color", new Three.BufferAttribute(colors, 3));
+        // "uv" 지정, 2개의 항목으로 인자 설정
+        geometry.setAttribute("uv", new Three.BufferAttribute(uvs, 2));
 
         // "Vertex Index" 지정
         geometry.setIndex([
@@ -131,10 +142,15 @@ class App {
         // 자동으로 법선벡터 계산
         //geometry.computeVertexNormals();
 
+        const textureLoader = new Three.TextureLoader();
+        const map = textureLoader.load("../three.js/uv_grid_opengl.jpg");
+
         const material = new Three.MeshPhongMaterial({
             color: 0xffffff,
             // 이 속성을 추가해야, 설정했던 "color" Attribute가 적용된다.
             vertexColors: true,
+            // material에 map속성을 추가해야 텍스처를 적용할 수 있다.
+            map: map,
         });
 
         // mesh를 생성하고 scene에 추가
