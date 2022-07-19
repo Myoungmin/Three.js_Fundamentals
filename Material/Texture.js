@@ -174,6 +174,7 @@ class App {
         const mapRoughness = textureLoader.load("../images/glass/Glass_Window_002_roughness.jpg");
         const mapMetalic = textureLoader.load("../images/glass/Glass_Window_002_metallic.jpg");
         const mapAlpha = textureLoader.load("../images/glass/Glass_Window_002_opacity.jpg");
+        const mapLight = textureLoader.load("../images/glass/light.jpg");
 
         const material = new Three.MeshStandardMaterial({
             map: map,
@@ -211,11 +212,14 @@ class App {
 
             // alphaMap : 투명도에 대한 맵 속성
             // transparent를 활성화가 되어야 적용된다.
-            alphaMap: mapAlpha,
+            //alphaMap: mapAlpha,
             transparent: true,
             // 투명한 부분을 봤을 때 뒷면도 볼 수 있도록 설정
             side: Three.DoubleSide,
 
+            // lightMap은 aoMap 처럼 적용되기 위해서 지오메트리 속성에 UV데이터를 지정해줘야 한다.
+            lightMap: mapLight,
+            lightMapInensity: 2,
         });
 
         // displacementMap 적용을 위해 지오메트리 표면을 여러 개의 면으로 분할시켜줘야 한다.
