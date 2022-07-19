@@ -76,19 +76,55 @@ class App {
     }
 
     _setupModel() {
-        // 정육면체 Geometry 객체 생성
-        // width, height, depth 인자를 모두 1로 설정하여 생성한다.
-        const geometry = new Three.BoxGeometry(1, 1, 1);
-        // 파란색 material 생성
-        const material = new Three.MeshPhongMaterial({ color: 0x44a88 });
+        // 사각형 위치를 나타내는 배열
+        const rawPositions = [
+            -1, -1, 0,
+            1, -1, 0,
+            -1, 1, 0,
+            1, 1, 0,
+        ]
 
-        // Geometry와 Material를 이용하여 Mesh가 생성된다.
-        const cube = new Three.Mesh(geometry, material);
+        // 법선 배열
+        // mesh의 면으로 봤을 때 면에 대한 수직인 벡터가 모두 (0,0,1)이다.
+        const rawNormals = [
+            0, 0, 1,
+            0, 0, 1,
+            0, 0, 1,
+            0, 0, 1,
+        ]
 
-        // 생성한 Mesh를 Scene 객체에 구가
-        this._scene.add(cube);
-        // 다른 메서드에서 참조할 수 있도록 필드에 정의한다.
-        this._cube = cube;
+        // 배열을 Float32Array 클래스 객체 생성
+        const positions = new Float32Array(rawPositions);
+        const normals = new Float32Array(rawNormals);
+
+        // Buffergeometry 객체 생성
+        const geometry = new Three.BufferGeometry();
+
+        // "position" 지정, 하나의 vertex가 3개의 항목(x, y, z)로 이루어진다는 뜻
+        geometry.setAttribute("position", new Three.BufferAttribute(positions, 3));
+        // "normal" 지정
+        geometry.setAttribute("normal", new Three.BufferAttribute(normals, 3));
+
+        // "Vertex Index" 지정
+        geometry.setIndex([
+            0, 1, 2,
+            2, 1, 3,
+        ]);
+
+        // 법선벡터를 지정해줘야 한다.
+        // 법선벡터는 광원이 mesh의 표면에 비추는 입사각과 반사각을 계산하여 재질과 함께 표면의 색상을 결정하는데 사용된다.
+
+        // 자동으로 법선벡터 계산
+        //geometry.computeVertexNormals();
+        // 법선벡터를 직접 지정
+
+
+
+        const material = new Three.MeshPhongMaterial({ color: 0xff0000 });
+
+        // mesh를 생성하고 scene에 추가
+        const box = new Three.Mesh(geometry, material);
+        this._scene.add(box);
     }
 
     resize() {
@@ -117,9 +153,6 @@ class App {
     update(time) {
         // 밀리초에서 초로 변환
         time *= 0.001;
-        // 시간값으로 큐브 회전
-        this._cube.rotation.x = time;
-        this._cube.rotation.y = time;
     }
 }
 
