@@ -102,41 +102,41 @@ class App {
         ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
-        // DirectionalLight : 태양과 같이 빛의 물체간의 거리에 상관없이 동일한 빛의 효과
-        const light = new Three.DirectionalLight(0xffffff, 0.5);
-        // 빛의 position과 target 속성의 position으로 결정되는 방향만이 의미가 있다.
-        light.position.set(0, 5, 0);
-        light.target.position.set(0, 0, 0);
-        this._scene.add(light.target);
-
-        // 그림자가 잘리는 현상을 해결하기 위해 그림자를 위한 절두체를 좀 더 크게 설정
-        light.shadow.camera.top = light.shadow.camera.right = 6;
-        light.shadow.camera.bottom = light.shadow.camera.left = -6;
-
-        // 그림자의 품질 향상
-        // 텍스처 맵핑 크기를 기본 512에서 크기를 키워주면 그림자 품질이 향상된다.
-        light.shadow.mapSize.width = light.shadow.mapSize.height = 1024;
-
-        // 상황에 따라 그림자의 경계가 선명하지 않고 블러링 처리가 필요가 있다.
-        // 이를 위해 shadow의 radius 값을 통해 설정할 수 있다.
-        // 기본값이 1인데 값이 커질수록 그림자 외곽의 블러링 효과가 강해진다.
-        light.shadow.radius = 1;
-
-
-        // // 이 광원을 화면상에 시각화 해주는 helper 객체
-        // const helper = new Three.DirectionalLightHelper(light);
-        // this._scene.add(helper);
-        // this._lightHelper = helper;
-        ////////////////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // // PointLight : 한 점에서 사방으로 비추는 빛
-        // const light = new Three.PointLight(0xffffff, 2);
+        // // DirectionalLight : 태양과 같이 빛의 물체간의 거리에 상관없이 동일한 빛의 효과
+        // const light = new Three.DirectionalLight(0xffffff, 0.5);
+        // // 빛의 position과 target 속성의 position으로 결정되는 방향만이 의미가 있다.
         // light.position.set(0, 5, 0);
+        // light.target.position.set(0, 0, 0);
+        // this._scene.add(light.target);
 
-        // // distance로 설정한 거리까지만 광원의 영향을 받는다.
-        // // 0으로 설정하면 무한
-        // light.distance = 10;
+        // // 그림자가 잘리는 현상을 해결하기 위해 그림자를 위한 절두체를 좀 더 크게 설정
+        // light.shadow.camera.top = light.shadow.camera.right = 6;
+        // light.shadow.camera.bottom = light.shadow.camera.left = -6;
+
+        // // 그림자의 품질 향상
+        // // 텍스처 맵핑 크기를 기본 512에서 크기를 키워주면 그림자 품질이 향상된다.
+        // light.shadow.mapSize.width = light.shadow.mapSize.height = 1024;
+
+        // // 상황에 따라 그림자의 경계가 선명하지 않고 블러링 처리가 필요가 있다.
+        // // 이를 위해 shadow의 radius 값을 통해 설정할 수 있다.
+        // // 기본값이 1인데 값이 커질수록 그림자 외곽의 블러링 효과가 강해진다.
+        // light.shadow.radius = 1;
+
+
+        // // // 이 광원을 화면상에 시각화 해주는 helper 객체
+        // // const helper = new Three.DirectionalLightHelper(light);
+        // // this._scene.add(helper);
+        // // this._lightHelper = helper;
+        ////////////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // PointLight : 한 점에서 사방으로 비추는 빛
+        const light = new Three.PointLight(0xffffff, 2);
+        light.position.set(0, 5, 0);
+
+        // distance로 설정한 거리까지만 광원의 영향을 받는다.
+        // 0으로 설정하면 무한
+        light.distance = 10;
 
         // // 이 광원을 화면상에 시각화 해주는 helper 객체
         // const helper = new Three.PointLightHelper(light);
@@ -308,29 +308,29 @@ class App {
 
 
             ////////////////////////////////////////////////////////////////////////////
-            // DirectionLight가 작은 구를 추적하면서 비추기
-            if (this._light.target) {
-                // 첫 번째 자식 가져오기
-                const smallSphere = smallSpherePivot.children[0];
-                // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
-                smallSphere.getWorldPosition(this._light.target.position);
-
-                // LightHelper를 업데이트
-                if (this._lightHelper) this._lightHelper.update();
-            }
-            ////////////////////////////////////////////////////////////////////////////
-
-            ////////////////////////////////////////////////////////////////////////////
-            // // PointLight가 작은 구에서 빛을 방사
-            // if (this._light) {
+            // // DirectionLight가 작은 구를 추적하면서 비추기
+            // if (this._light.target) {
             //     // 첫 번째 자식 가져오기
             //     const smallSphere = smallSpherePivot.children[0];
             //     // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
-            //     smallSphere.getWorldPosition(this._light.position);
+            //     smallSphere.getWorldPosition(this._light.target.position);
 
             //     // LightHelper를 업데이트
             //     if (this._lightHelper) this._lightHelper.update();
             // }
+            ////////////////////////////////////////////////////////////////////////////
+
+            ////////////////////////////////////////////////////////////////////////////
+            // PointLight가 작은 구에서 빛을 방사
+            if (this._light) {
+                // 첫 번째 자식 가져오기
+                const smallSphere = smallSpherePivot.children[0];
+                // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
+                smallSphere.getWorldPosition(this._light.position);
+
+                // LightHelper를 업데이트
+                if (this._lightHelper) this._lightHelper.update();
+            }
             ////////////////////////////////////////////////////////////////////////////
 
             ////////////////////////////////////////////////////////////////////////////
