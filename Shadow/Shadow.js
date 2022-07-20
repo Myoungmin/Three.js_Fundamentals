@@ -15,6 +15,10 @@ class App {
         // window의 devicePixelRatio 속성을 얻어와 PixelRatio 설정
         // 디스플레이 설정의 배율값을 얻어온다.
         renderer.setPixelRatio(window.devicePixelRatio);
+
+        // 그림자 맵 활성화
+        renderer.shadowMap.enabled = true;
+
         // domElement를 자식으로 추가.
         // canvas 타입의 DOM 객체이다.
         // 문서 객체 모델(DOM, Document Object Model)은 XML이나 HTML 문서에 접근하기 위한 일종의 인터페이스.
@@ -71,6 +75,13 @@ class App {
     }
 
     _setupLight() {
+        // 그림자를 뚜렷하게 보기 위해 광원을 하나 더 추가한다.
+        const auxLight = new Three.DirectionalLight(0xffffff, 0.5);
+        auxLight.position.set(0, 5, 0);
+        auxLight.target.position.set(0, 0, 0);
+        this._scene.add(auxLight.target);
+        this._scene.add(auxLight);
+
         ////////////////////////////////////////////////////////////////////////////////
         // // 광원 색상 설정
         // const color = 0xffffff;
@@ -90,17 +101,17 @@ class App {
         ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
-        // // DirectionalLight : 태양과 같이 빛의 물체간의 거리에 상관없이 동일한 빛의 효과
-        // const light = new Three.DirectionalLight(0xffffff, 1);
-        // // 빛의 position과 target 속성의 position으로 결정되는 방향만이 의미가 있다.
-        // light.position.set(0, 5, 0);
-        // light.target.position.set(0, 0, 0);
-        // this._scene.add(light.target);
+        // DirectionalLight : 태양과 같이 빛의 물체간의 거리에 상관없이 동일한 빛의 효과
+        const light = new Three.DirectionalLight(0xffffff, 0.5);
+        // 빛의 position과 target 속성의 position으로 결정되는 방향만이 의미가 있다.
+        light.position.set(0, 5, 0);
+        light.target.position.set(0, 0, 0);
+        this._scene.add(light.target);
 
-        // // 이 광원을 화면상에 시각화 해주는 helper 객체
-        // const helper = new Three.DirectionalLightHelper(light);
-        // this._scene.add(helper);
-        // this._lightHelper = helper;
+        // 이 광원을 화면상에 시각화 해주는 helper 객체
+        const helper = new Three.DirectionalLightHelper(light);
+        this._scene.add(helper);
+        this._lightHelper = helper;
         ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -119,26 +130,30 @@ class App {
         ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
-        // SpotLight : 광원 위치에서 원뿔 모양으로 퍼져나가는 빛
-        const light = new Three.SpotLight(0xffffff, 1);
-        light.position.set(0, 5, 0);
-        light.target.position.set(0, 0, 0);
-        light.angle = Three.MathUtils.degToRad(30);
-        // 빛의 감쇄율
-        // 0은 빛의 감쇄가 전혀 없다는 뜻
-        light.penumbra = 0;
-        this._scene.add(light.target);
+        // // SpotLight : 광원 위치에서 원뿔 모양으로 퍼져나가는 빛
+        // const light = new Three.SpotLight(0xffffff, 1);
+        // light.position.set(0, 5, 0);
+        // light.target.position.set(0, 0, 0);
+        // light.angle = Three.MathUtils.degToRad(30);
+        // // 빛의 감쇄율
+        // // 0은 빛의 감쇄가 전혀 없다는 뜻
+        // light.penumbra = 0;
+        // this._scene.add(light.target);
 
-        // 이 광원을 화면상에 시각화 해주는 helper 객체
-        const helper = new Three.SpotLightHelper(light);
-        this._scene.add(helper);
-        this._lightHelper = helper;
+        // // 이 광원을 화면상에 시각화 해주는 helper 객체
+        // const helper = new Three.SpotLightHelper(light);
+        // this._scene.add(helper);
+        // this._lightHelper = helper;
         ////////////////////////////////////////////////////////////////////////////////
+
 
         //Scene객체에 광원 추가
         this._scene.add(light);
 
         this._light = light;
+
+        // 광원에서 그림자를 줄 것인지 여부
+        light.castShadow = true;
     }
 
     _setupModel() {
@@ -153,6 +168,10 @@ class App {
 
         const ground = new Three.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = Three.MathUtils.degToRad(-90);
+
+        // ground는 그림자를 받아 그림자를 표현하도록 설정
+        ground.receiveShadow = true;
+
         this._scene.add(ground);
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -167,6 +186,12 @@ class App {
         const torusKnot = new Three.Mesh(torusKnotGeometry, bigSphereMaterial);
         //torusKnot.rotation.x = Three.MathUtils.degToRad(-90);
         torusKnot.position.y = 1.6;
+
+        // torusKnot이 그림자를 받아 그림자를 표현하도록 설정
+        torusKnot.receiveShadow = true;
+        // torusKnot은 그림자를 주기도 한다.
+        torusKnot.castShadow = true;
+
         this._scene.add(torusKnot);
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -184,6 +209,12 @@ class App {
             torusPivot.rotation.y = Three.MathUtils.degToRad(45 * i);
             torus.position.set(3, 0.5, 0);
             torusPivot.add(torus);
+
+            // torus 그림자를 받아 그림자를 표현하도록 설정
+            torus.receiveShadow = true;
+            // torus 그림자를 주기도 한다.
+            torus.castShadow = true;
+
             this._scene.add(torusPivot);
         }
         ////////////////////////////////////////////////////////////////////////////////
@@ -201,6 +232,12 @@ class App {
         // 이름을 부여한 객체는 Scene을 통해서 조회할 수 있다.
         smallSpherePivot.name = "smallSpherePivot";
         smallSphere.position.set(3, 0.5, 0);
+
+        // smallSphere 그림자를 받아 그림자를 표현하도록 설정
+        smallSphere.receiveShadow = true;
+        // smallSphere 그림자를 주기도 한다.
+        smallSphere.castShadow = true;
+
         this._scene.add(smallSpherePivot);
         ////////////////////////////////////////////////////////////////////////////////
     }
@@ -244,16 +281,16 @@ class App {
 
 
             ////////////////////////////////////////////////////////////////////////////
-            // // DirectionLight가 작은 구를 추적하면서 비추기
-            // if (this._light.target) {
-            //     // 첫 번째 자식 가져오기
-            //     const smallSphere = smallSpherePivot.children[0];
-            //     // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
-            //     smallSphere.getWorldPosition(this._light.target.position);
+            // DirectionLight가 작은 구를 추적하면서 비추기
+            if (this._light.target) {
+                // 첫 번째 자식 가져오기
+                const smallSphere = smallSpherePivot.children[0];
+                // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
+                smallSphere.getWorldPosition(this._light.target.position);
 
-            //     // LightHelper를 업데이트
-            //     if (this._lightHelper) this._lightHelper.update();
-            // }
+                // LightHelper를 업데이트
+                if (this._lightHelper) this._lightHelper.update();
+            }
             ////////////////////////////////////////////////////////////////////////////
 
             ////////////////////////////////////////////////////////////////////////////
@@ -270,16 +307,16 @@ class App {
             ////////////////////////////////////////////////////////////////////////////
 
             ////////////////////////////////////////////////////////////////////////////
-            // SpotLigth가 작은 구를 추적하면서 비추기
-            if (this._light.target) {
-                // 첫 번째 자식 가져오기
-                const smallSphere = smallSpherePivot.children[0];
-                // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
-                smallSphere.getWorldPosition(this._light.target.position);
+            // // SpotLigth가 작은 구를 추적하면서 비추기
+            // if (this._light.target) {
+            //     // 첫 번째 자식 가져오기
+            //     const smallSphere = smallSpherePivot.children[0];
+            //     // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
+            //     smallSphere.getWorldPosition(this._light.target.position);
 
-                // LightHelper를 업데이트
-                if (this._lightHelper) this._lightHelper.update();
-            }
+            //     // LightHelper를 업데이트
+            //     if (this._lightHelper) this._lightHelper.update();
+            // }
             ////////////////////////////////////////////////////////////////////////////
         }
     }
