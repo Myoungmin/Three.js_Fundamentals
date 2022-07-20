@@ -113,6 +113,16 @@ class App {
         light.shadow.camera.top = light.shadow.camera.right = 6;
         light.shadow.camera.bottom = light.shadow.camera.left = -6;
 
+        // 그림자의 품질 향상
+        // 텍스처 맵핑 크기를 기본 512에서 크기를 키워주면 그림자 품질이 향상된다.
+        light.shadow.mapSize.width = light.shadow.mapSize.height = 1024;
+
+        // 상황에 따라 그림자의 경계가 선명하지 않고 블러링 처리가 필요가 있다.
+        // 이를 위해 shadow의 radius 값을 통해 설정할 수 있다.
+        // 기본값이 1인데 값이 커질수록 그림자 외곽의 블러링 효과가 강해진다.
+        light.shadow.radius = 1;
+
+
         // // 이 광원을 화면상에 시각화 해주는 helper 객체
         // const helper = new Three.DirectionalLightHelper(light);
         // this._scene.add(helper);
