@@ -36,6 +36,10 @@ class App {
         // 마우스 컨트롤 설정
         this._setupControls();
 
+        // 카메라 전환을 위한 flag와 setInterval 설정
+        this._flag = true;
+        setInterval(() => {this._flag = !this._flag}, 2000);
+
         // 창 크기가 변경될 때 발생하는 이벤트인 onresize에 App 클래스의 resize 메서드를 연결한다.
         // this가 가리키는 객체가 이벤트 객체가 아닌 App클래스 객체가 되도록 하기 위해 bind로 설정한다.
         // onresize 이벤트가 필요한 이유는 렌더러와 카메라는 창 크기가 변경될 때마다 그 크기에 맞게 속성값을 재설정해줘야 한다.
@@ -253,7 +257,7 @@ class App {
             smallSpherePivot.rotation.y = Three.MathUtils.degToRad(time * 50);
 
 
-
+            if(this._flag){
             // 첫 번째 자식 작은 구의 월드 좌표를 가져와 카메라 위치로 설정한다.
             const smallSphere = smallSpherePivot.children[0];
             smallSphere.getWorldPosition(this._camera.position);
@@ -274,7 +278,13 @@ class App {
                 // 이 위치를 카메라가 바라보게 한다.
                 this._camera.lookAt(pt);
             }
-
+        }
+        else{
+            // 카메라 위치 설정
+            this._camera.position.set(7, 7, 0);
+        // 카메라가 원점을 바라보도록 설정
+        this._camera.lookAt(0, 0, 0);
+        }
 
 
             ////////////////////////////////////////////////////////////////////////////
