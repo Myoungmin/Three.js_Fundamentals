@@ -104,16 +104,33 @@ class App {
         ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
-        // PointLight : 한 점에서 사방으로 비추는 빛
-        const light = new Three.PointLight(0xffffff, 2);
-        light.position.set(0, 5, 0);
+        // // PointLight : 한 점에서 사방으로 비추는 빛
+        // const light = new Three.PointLight(0xffffff, 2);
+        // light.position.set(0, 5, 0);
 
-        // distance로 설정한 거리까지만 광원의 영향을 받는다.
-        // 0으로 설정하면 무한
-        light.distance = 10;
+        // // distance로 설정한 거리까지만 광원의 영향을 받는다.
+        // // 0으로 설정하면 무한
+        // light.distance = 10;
+
+        // // 이 광원을 화면상에 시각화 해주는 helper 객체
+        // const helper = new Three.PointLightHelper(light);
+        // this._scene.add(helper);
+        // this._lightHelper = helper;
+        ////////////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // SpotLight : 광원 위치에서 원뿔 모양으로 퍼져나가는 빛
+        const light = new Three.SpotLight(0xffffff, 1);
+        light.position.set(0, 5, 0);
+        light.target.position.set(0, 0, 0);
+        light.angle = Three.MathUtils.degToRad(30);
+        // 빛의 감쇄율
+        // 0은 빛의 감쇄가 전혀 없다는 뜻
+        light.penumbra = 0;
+        this._scene.add(light.target);
 
         // 이 광원을 화면상에 시각화 해주는 helper 객체
-        const helper = new Three.PointLightHelper(light);
+        const helper = new Three.SpotLightHelper(light);
         this._scene.add(helper);
         this._lightHelper = helper;
         ////////////////////////////////////////////////////////////////////////////////
@@ -238,12 +255,25 @@ class App {
             ////////////////////////////////////////////////////////////////////////////
 
             ////////////////////////////////////////////////////////////////////////////
-            // PointLight가 작은 구를 추적하면서 비추기
-            if (this._light) {
+            // // PointLight가 작은 구에서 빛을 방사
+            // if (this._light) {
+            //     // 첫 번째 자식 가져오기
+            //     const smallSphere = smallSpherePivot.children[0];
+            //     // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
+            //     smallSphere.getWorldPosition(this._light.position);
+
+            //     // LightHelper를 업데이트
+            //     if (this._lightHelper) this._lightHelper.update();
+            // }
+            ////////////////////////////////////////////////////////////////////////////
+
+            ////////////////////////////////////////////////////////////////////////////
+            // SpotLigth가 작은 구를 추적하면서 비추기
+            if (this._light.target) {
                 // 첫 번째 자식 가져오기
                 const smallSphere = smallSpherePivot.children[0];
                 // 월드 좌표를 가져와서 광원의 타깃 위치로 설정
-                smallSphere.getWorldPosition(this._light.position);
+                smallSphere.getWorldPosition(this._light.target.position);
 
                 // LightHelper를 업데이트
                 if (this._lightHelper) this._lightHelper.update();
