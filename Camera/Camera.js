@@ -201,6 +201,18 @@ class App {
         smallSphere.position.set(3, 0.5, 0);
         this._scene.add(smallSpherePivot);
         ////////////////////////////////////////////////////////////////////////////////
+
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // 구의 다음 위치를 얻기 위해서 새로운 Object3D객체를 Scene에 추가하는 코드
+        const targetPivot = new Three.Object3D();
+        // Mesh 대신 Object3D로 설정하여 화면상에 렌더링 되지는 않지만 Scene의 구성 요소로 자리잡는다.
+        const target = new Three.Object3D();
+        targetPivot.add(target);
+        targetPivot.name = "targetPivot";
+        target.position.set(3, 0.5, 0);
+        this._scene.add(targetPivot);
+        ////////////////////////////////////////////////////////////////////////////////
     }
 
     _setupControls() {
@@ -239,6 +251,30 @@ class App {
         if (smallSpherePivot) {
             // 작은 구 회전하도록 설정
             smallSpherePivot.rotation.y = Three.MathUtils.degToRad(time * 50);
+
+
+
+            // 첫 번째 자식 작은 구의 월드 좌표를 가져와 카메라 위치로 설정한다.
+            const smallSphere = smallSpherePivot.children[0];
+            smallSphere.getWorldPosition(this._camera.position);
+
+
+            // targetPivot의 자식인 target이 빨간색 구의 다음 위치에 놓이도록 설정
+            const targetPivot = this._scene.getObjectByName("targetPivot");
+            if (targetPivot) {
+                // 10도 만큼 더 회전시켜 앞에 있다.
+                targetPivot.rotation.y = Three.MathUtils.degToRad(time * 50 + 10)
+
+                // targetPivot의 첫 번째 자식을 얻는다.
+                const target = targetPivot.children[0];
+                const pt = new Three.Vector3();
+
+                // target의 월드좌표를 얻어 pt로 설정
+                target.getWorldPosition(pt);
+                // 이 위치를 카메라가 바라보게 한다.
+                this._camera.lookAt(pt);
+            }
+
 
 
             ////////////////////////////////////////////////////////////////////////////
