@@ -82,6 +82,7 @@ class App {
         this._scene.add(auxLight.target);
         this._scene.add(auxLight);
 
+
         ////////////////////////////////////////////////////////////////////////////////
         // // 광원 색상 설정
         // const color = 0xffffff;
@@ -108,10 +109,14 @@ class App {
         light.target.position.set(0, 0, 0);
         this._scene.add(light.target);
 
-        // 이 광원을 화면상에 시각화 해주는 helper 객체
-        const helper = new Three.DirectionalLightHelper(light);
-        this._scene.add(helper);
-        this._lightHelper = helper;
+        // 그림자가 잘리는 현상을 해결하기 위해 그림자를 위한 절두체를 좀 더 크게 설정
+        light.shadow.camera.top = light.shadow.camera.right = 6;
+        light.shadow.camera.bottom = light.shadow.camera.left = -6;
+
+        // // 이 광원을 화면상에 시각화 해주는 helper 객체
+        // const helper = new Three.DirectionalLightHelper(light);
+        // this._scene.add(helper);
+        // this._lightHelper = helper;
         ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -145,6 +150,18 @@ class App {
         // this._scene.add(helper);
         // this._lightHelper = helper;
         ////////////////////////////////////////////////////////////////////////////////
+
+
+
+        // 광원의 그림자를 위한 카메라를 시각화
+        // 그림자를 지원하는 광원은 모두 shadow라는 속성을 갖고, 이 shadow 속성에는 camera 속성이 존재한다.
+        // 이 camera가 그림자에 대한 텍스처 이미지를 생성하기 위해 사용된다.
+        // DirectionalLight의 그림자를 위한 카메라는 OrthographicCamera라 절두체를 벗어난 객체는 모두 잘려나간다.
+        // 그림자가 잘려 보이는 것은 절두체를 벗어나기 때문이다.
+        // 이런 현상을 해결하기 위해서는 그림자를 위한 절두체를 좀 더 크게 설정하면 된다.
+        const cameraHelper = new Three.CameraHelper(light.shadow.camera);
+        this._scene.add(cameraHelper);
+
 
 
         //Scene객체에 광원 추가
