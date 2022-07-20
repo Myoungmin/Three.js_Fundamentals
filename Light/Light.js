@@ -71,14 +71,18 @@ class App {
     }
 
     _setupLight() {
+        ////////////////////////////////////////////////////////////////////////////////
         // 광원 색상 설정
         const color = 0xffffff;
         // 광원 세기 설정
         const intensity = 5;
-        // 위 설정을 바탕으로 Directional 광원 객체 생성
+        // AmbientLight : 단순히 scene에 존재하는 모든 물체에 대해서 단일 색상으로 렌더링되도록 한다.
+        // 대부분의 경우 세기값을 매우 약하게 지정해서 장면에 추가된다.
+        // 광원의 영향을 받지 못하는 물체도 살짝 보여지도록 하는데 사용된다.
         const light = new Three.AmbientLight(color, intensity);
         // Scene객체에 광원 추가
         this._scene.add(light);
+        ////////////////////////////////////////////////////////////////////////////////
 
         this._light = light;
     }
